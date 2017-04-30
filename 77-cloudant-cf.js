@@ -93,11 +93,12 @@ module.exports = function(RED) {
 
         Cloudant(credentials, function(err, cloudant) {
             if (err) { node.error(err.description, err); }
-            else {
+            /* SUP BZ
+			else {
                 // check if the database exists and create it if it doesn't
                 createDatabase(cloudant, node);
             }
-
+			*/
             node.on("input", function(msg) {
                 if (err) { 
                     return node.error(err.description, err); 
@@ -135,11 +136,14 @@ module.exports = function(RED) {
 
         function handleMessage(cloudant, node, msg) {
             if (node.operation === "insert") {
-                var msg  = node.payonly ? msg.payload : msg;
+ 				if (msg.dbName) {															// ------ ADD BZ
+					var dBase = msg.dbName;													// ------ ADD BZ
+					console.log( "Cloudant-in node entered with msg.dbName " + dBase );		// ------ ADD BZ
+				}
+				var msg  = node.payonly ? msg.payload : msg;
                 var root = node.payonly ? "payload" : "msg";
                 var doc  = parseMessage(msg, root);
-
-                insertDocument(cloudant, node, doc, MAX_ATTEMPTS, function(err, body) {
+                insertDocument(cloudant, node, dBase , doc, MAX_ATTEMPTS, function(err, body) {		// -------------- MOD BZ
                     if (err) {
                         console.trace();
                         console.log(node.error.toString());
@@ -208,8 +212,9 @@ module.exports = function(RED) {
         // beforehand. If the database doesn't exist, it will create one
         // with the name specified in +db+. To prevent loops, it only tries
         // +attempts+ number of times.
-        function insertDocument(cloudant, node, doc, attempts, callback) {
-            var db = cloudant.use(node.database);
+        function insertDocument(cloudant, node, dbase , doc, attempts, callback) {		// ---------------- MOD BZ
+            var db = cloudant.use(dbase);												// -----------------MOD BZ
+			console.log( "Insert new item in database " + dbase );						// -----------------ADD BZ
             db.insert(doc, function(err, body) {
                 if (err && err.status_code === 404 && attempts > 0) {
                     // status_code 404 means the database was not found
