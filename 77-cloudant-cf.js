@@ -98,18 +98,27 @@ module.exports = function(RED) {
                 // check if the database exists and create it if it doesn't
                 createDatabase(cloudant, node);
             }
-			*/
+			END SUP BZ */
             node.on("input", function(msg) {
                 if (err) { 
                     return node.error(err.description, err); 
                 }
-
                 delete msg._msgid;
-                handleMessage(cloudant, node, msg);
+				// ADD BZ 
+				if (msg.dbName) {
+					console.log( "Cloudant-out node entered with msg.dbName " + msg.dbName );
+				}
+				else {	
+					var error = ,new Error("Failed to insert/delete into Cloudant database because of missing msg.dbName in the flow input message" );
+					node.error(err.message, msg);
+					return;																										
+				}
+				// END ADD BZ
+                handleMessage(cloudant, node, msg , msg.dbName );							// MOD  BZ
             });
         });
 
-        function createDatabase(cloudant, node) {
+        function createDatabase(cloudant, node) {											// NO MORE USED BZ
             cloudant.db.list(function(err, all_dbs) {
                 if (err) {
                     if (err.status_code === 403) {
@@ -134,16 +143,13 @@ module.exports = function(RED) {
             });
         }
 
-        function handleMessage(cloudant, node, msg) {
+        function handleMessage(cloudant, node, msg , dbase ) {										// MOD BZ
             if (node.operation === "insert") {
- 				if (msg.dbName) {															// ------ ADD BZ
-					var dBase = msg.dbName;													// ------ ADD BZ
-					console.log( "Cloudant-in node entered with msg.dbName " + dBase );		// ------ ADD BZ
-				}
+	
 				var msg  = node.payonly ? msg.payload : msg;
                 var root = node.payonly ? "payload" : "msg";
                 var doc  = parseMessage(msg, root);
-                insertDocument(cloudant, node, dBase , doc, MAX_ATTEMPTS, function(err, body) {		// -------------- MOD BZ
+                insertDocument(cloudant, node, dbase , doc, MAX_ATTEMPTS, function(err, body) {		// MOD BZ
                     if (err) {
                         console.trace();
                         console.log(node.error.toString());
@@ -155,7 +161,7 @@ module.exports = function(RED) {
                 var doc = parseMessage(msg.payload || msg, "");
 
                 if ("_rev" in doc && "_id" in doc) {
-                    var db = cloudant.use(node.database);
+                    var db = cloudant.use(dbase);													// MOD BZ
                     db.destroy(doc._id, doc._rev, function(err, body) {
                         if (err) {
                             node.error("Failed to delete document: " + err.description, msg);
@@ -212,9 +218,9 @@ module.exports = function(RED) {
         // beforehand. If the database doesn't exist, it will create one
         // with the name specified in +db+. To prevent loops, it only tries
         // +attempts+ number of times.
-        function insertDocument(cloudant, node, dbase , doc, attempts, callback) {		// ---------------- MOD BZ
-            var db = cloudant.use(dbase);												// -----------------MOD BZ
-			console.log( "Insert new item in database " + dbase );						// -----------------ADD BZ
+		
+        function insertDocument(cloudant, node, dbase , doc, attempts, callback) {		// MOD BZ
+            var db = cloudant.use(dbase);												// MOD BZ
             db.insert(doc, function(err, body) {
                 if (err && err.status_code === 404 && attempts > 0) {
                     // status_code 404 means the database was not found
@@ -255,8 +261,18 @@ module.exports = function(RED) {
                 if (err) {
                     return node.error(err.description, err);
                 }
+				// ADD BZ 
+				if (msg.dbName) {
+					console.log( "Cloudant-in node entered with msg.dbName " + msg.dbName );
+				}
+				else {	
+					var error = ,new Error("Failed to query/search from Cloudant database because of missing msg.dbName in the flow input message" );
+					node.error(err.message, msg);
+					return;																										
+				}
+				// END ADD BZ
 
-                var db = cloudant.use(node.database);
+                var db = cloudant.use(msg.dbName);										// MOD BZ
                 var options = (typeof msg.payload === "object") ? msg.payload : {};
 
                 if (node.search === "_id_") {
