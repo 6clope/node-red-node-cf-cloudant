@@ -16,12 +16,13 @@ Usage
 Allows basic access to a [Cloudant](http://cloudant.com) database to
 `insert`, `update`, `delete` and `search` for documents.
 
+Please note this contribution for all the database operations (cloudant-out and cloudant-in nodes) : 
+The database name, in static in the node configuration before, is no more requested. The database name must 
+be dynamically given in the input flow message the through 'msg.dbName' property.
+
 To **insert** a new document into the database you have the option to store
 the entire `msg` object or just the `msg.payload`. If the input value is not
 in JSON format, it will be transformed before being stored.
-
-Please note this contribution for the insert operation : The database name in static in the node configuration
-is no more needed. Give the database name dynamicallyin the msg property 'msg.dbName'
 
 For **update** and **delete**, you must pass the `_id` and the `_rev`as part
 of the input `msg` object.
