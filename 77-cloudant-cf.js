@@ -80,7 +80,7 @@ module.exports = function(RED) {
 
         this.operation      = n.operation;
         this.payonly        = n.payonly || false;
-        this.database       = _cleanDatabaseName(n.database, this);
+        // this.database       = _cleanDatabaseName(n.database, this);      // SUP BZ
         this.cloudantConfig = _getCloudantConfig(n);
 
         var node = this;
@@ -240,7 +240,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         this.cloudantConfig = _getCloudantConfig(n);
-        this.database       = _cleanDatabaseName(n.database, this);
+        // this.database       = _cleanDatabaseName(n.database, this);          // SUP BZ
         this.search         = n.search;
         this.design         = n.design;
         this.index          = n.index;
