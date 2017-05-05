@@ -137,7 +137,7 @@
         defaults: {
             name: { value: "" },
             cloudant: { type:"cloudant", validate:validateServer},
-            database: { value:"", required:false, validate:validateDatabase },
+            database: { value:"", required:true, validate:validateDatabase },
             service: { value:"", required:true },
             payonly: { value:false },
             operation: { value:"insert" }
@@ -159,7 +159,7 @@
         defaults: {
             name    : { value:"" },
             cloudant: { type:"cloudant", validate:validateServer },
-            database: { value:"", required:false, validate:validateDatabase },
+            database: { value:"", required:true, validate:validateDatabase },
             service : { value:"", required:true },
             search  : { value:"_id_", required:true },
             design  : { value:"" },
