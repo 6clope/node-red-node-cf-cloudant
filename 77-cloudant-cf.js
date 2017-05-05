@@ -109,7 +109,7 @@ module.exports = function(RED) {
 					console.log( "Cloudant-out node entered with msg.dbName " + msg.dbName );
 				}
 				else {	
-					var error = ,new Error("Failed to insert/delete into Cloudant database because of missing msg.dbName in the flow input message" );
+					var error = new Error("Failed to insert/delete into Cloudant database because of missing msg.dbName in the flow input message" );
 					node.error(err.message, msg);
 					return;																										
 				}
@@ -266,7 +266,7 @@ module.exports = function(RED) {
 					console.log( "Cloudant-in node entered with msg.dbName " + msg.dbName );
 				}
 				else {	
-					var error = ,new Error("Failed to query/search from Cloudant database because of missing msg.dbName in the flow input message" );
+					var error = new Error("Failed to query/search from Cloudant database because of missing msg.dbName in the flow input message" );
 					node.error(err.message, msg);
 					return;																										
 				}
