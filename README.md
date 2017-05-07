@@ -18,7 +18,7 @@ Allows basic access to a [Cloudant](http://cloudant.com) database to
 
 Please note this contribution for all the database operations (cloudant-out and cloudant-in nodes) : 
 The database name, in static in the node configuration before, is no more requested. The database name must 
-be dynamically given in the input flow message the through 'msg.dbName' property.
+be dynamically given in the input flow message through the 'msg.dbName' property.
 
 To **insert** a new document into the database you have the option to store
 the entire `msg` object or just the `msg.payload`. If the input value is not
