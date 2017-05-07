@@ -63,10 +63,12 @@
         <label for="node-input-cloudant"><i class="fa fa-bookmark"></i> Server</label>
         <input type="text" id="node-input-cloudant">
     </div>
+	<!---- SUP BZ
     <div class="form-row">
         <label for="node-input-database"><i class="fa fa-briefcase"></i> Database</label>
         <input type="text" id="node-input-database" placeholder="database" style="width:65%;">
     </div>
+	-->
     </div>
         <div class="form-row">
         <label for="node-input-operation"><i class="fa fa-wrench"></i> Operation</label>
@@ -106,10 +108,12 @@
         <label for="node-input-cloudant"><i class="fa fa-bookmark"></i> Server</label>
         <input type="text" id="node-input-cloudant">
     </div>
+		<!---- SUP BZ
     <div class="form-row">
         <label for="node-input-database"><i class="fa fa-briefcase"></i> Database</label>
         <input type="text" id="node-input-database" placeholder="database" style="width:65%;">
     </div>
+	-->
     <div class="form-row">
         <label for="node-input-search"><i class="fa fa-search"></i> Search by</label>
         <select id="node-input-search" style="width:68%;">
@@ -242,8 +246,12 @@
 
 <script type="text/x-red" data-help-name="cloudant out">
    <p>
-       A simple Cloudant output node. Stores <b>msg</b> in a chosen database.
-    </p>
+       A simple Cloudant output node. Stores <b>msg</b> in a chosen database. 
+	</p>
+	<p>
+		The target database must be dynamically given in the input flow message 
+		through the 'msg.dbName' property
+	</p>
    <p>
        Cloudant generates a random id for the <code>_id</code> property if one
        is not specified and a new document will be <b>inserted</b> each time.
@@ -283,7 +291,11 @@
 <script type="text/x-red" data-help-name="cloudant in">
    <p>
         A node for searching documents in a Cloudant database.
-    </p>
+	</p>
+	<p>
+		The target database must be dynamically given in the input flow message 
+		through the 'msg.dbName' property
+	</p>
     <p>
         Searching for documents can be done in three modes: directly by using the
         document's <b>_id</b>, by using an existing <a
