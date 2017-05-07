@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+ 
+
 module.exports = function(RED) {
     "use strict";
     var url         = require('url');
     var querystring = require('querystring');
     var cfEnv       = require("cfenv");
     var Cloudant    = require("cloudant");
-
+	
     var MAX_ATTEMPTS = 3;
 
     var appEnv   = cfEnv.getAppEnv();
@@ -48,6 +50,7 @@ module.exports = function(RED) {
     // Create and register nodes
     //
     function CloudantNode(n) {
+		
         RED.nodes.createNode(this, n);
         this.name = n.name;
         this.host = n.host;
@@ -80,7 +83,7 @@ module.exports = function(RED) {
 
         this.operation      = n.operation;
         this.payonly        = n.payonly || false;
-        // this.database       = _cleanDatabaseName(n.database, this);      // SUP BZ
+        // this.database       = _cleanDatabaseName(n.database, this);			// SUP BZ
         this.cloudantConfig = _getCloudantConfig(n);
 
         var node = this;
@@ -240,7 +243,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         this.cloudantConfig = _getCloudantConfig(n);
-        // this.database       = _cleanDatabaseName(n.database, this);          // SUP BZ
+        // this.database       = _cleanDatabaseName(n.database, this);				// SUP BZ
         this.search         = n.search;
         this.design         = n.design;
         this.index          = n.index;
@@ -271,7 +274,6 @@ module.exports = function(RED) {
 					return;																										
 				}
 				// END ADD BZ
-
                 var db = cloudant.use(msg.dbName);										// MOD BZ
                 var options = (typeof msg.payload === "object") ? msg.payload : {};
 
@@ -287,7 +289,6 @@ module.exports = function(RED) {
                     options.query = options.query || options.q || formatSearchQuery(msg.payload);
                     options.include_docs = options.include_docs || true;
                     options.limit = options.limit || 200;
-
                     db.search(node.design, node.index, options, function(err, body) {
                         sendDocumentOnPayload(err, body, msg);
                     });
